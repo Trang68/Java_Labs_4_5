@@ -14,7 +14,6 @@ public class DBConnection {
 
 	static public DBConnection instance() {
 		while (dataBase == null) {
-			Scanner scanner = new Scanner(System.in);
 			String username = "root";
 			String password = "06081998";
 			try {
@@ -116,6 +115,7 @@ public class DBConnection {
 	private ArrayList<Good> show(ResultSet resultSet) throws SQLException {
 		var arrayResult = new ArrayList<Good>();
 		if (resultSet != null) {
+			try {
 			while (resultSet.next()) {
 				int prodid = resultSet.getInt("prodid");
 				String title = resultSet.getString("title");
@@ -123,6 +123,11 @@ public class DBConnection {
 				arrayResult.add(new Good(prodid, title, cost));
 			}
 			resultSet.close();
+			}
+			catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
 			return arrayResult;
 		} else {
 			System.out.println("There are no records");

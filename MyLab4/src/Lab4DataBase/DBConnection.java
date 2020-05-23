@@ -10,7 +10,6 @@ import javax.sound.sampled.LineListener;
 public class DBConnection {
 	static public DBConnection instance() {
 		while (dataBase == null) {
-			Scanner scanner = new Scanner(System.in);
 			String username = "root";
 			String password = "06081998";
 			try {
@@ -92,14 +91,19 @@ public class DBConnection {
 	private void show(ResultSet resultSet) throws SQLException {
 		if (resultSet != null) {
 			System.out.println("prodid title cost");
-			while (resultSet.next()) {
+			try{
+				while (resultSet.next()) {
 				int prodid = resultSet.getInt("prodid");
 				String title = resultSet.getString("title");
 				double cost = resultSet.getDouble("cost");
 				System.out.println(prodid + " " + title + " " + cost);
 			}
 			resultSet.close();
-		} else {
+		} catch(SQLException e) {
+			System.out.println(e.getMessage());
+        }
+		}
+			else {
 			System.out.println("There are no records!");
 		}
 
