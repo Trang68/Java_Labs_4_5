@@ -39,11 +39,11 @@ public class DBConnection {
 	public ArrayList<Good> getData() {
 		String showQuery = "SELECT * FROM " + name;
 		var arrayResult = new ArrayList<Good>();
-		try {
-			Statement statement = connection.createStatement();
+		try (Statement statement = connection.createStatement()){
+			
 			ResultSet resultSet = statement.executeQuery(showQuery);
 			arrayResult = show(resultSet);
-			statement.close();
+			//statement.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -52,8 +52,8 @@ public class DBConnection {
 
 	private void createProductsTable(int N) {
 		String dropQuery = "SHOW TABLES LIKE '" + name + "'";
-		try {
-			Statement statement = connection.createStatement();
+		try (Statement statement = connection.createStatement()){
+			
 			ResultSet resultSet = statement.executeQuery(dropQuery);
 			if (resultSet != null) {
 				if (resultSet.next()) {
@@ -65,7 +65,7 @@ public class DBConnection {
 					executeUpdate(createQuery);
 				}
 			}
-			statement.close();
+			//statement.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -79,11 +79,11 @@ public class DBConnection {
 	}
 
 	private boolean executeUpdate(String query) {
-		Statement statement;
-		try {
-			statement = connection.createStatement();
+		
+		try(Statement statement = connection.createStatement()) {
+			
 			statement.executeUpdate(query);
-			statement.close();
+			//statement.close();
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 			return false;
@@ -115,14 +115,14 @@ public class DBConnection {
 	private ArrayList<Good> show(ResultSet resultSet) throws SQLException {
 		var arrayResult = new ArrayList<Good>();
 		if (resultSet != null) {
-			try {
+			try(resultSet) {
 			while (resultSet.next()) {
 				int prodid = resultSet.getInt("prodid");
 				String title = resultSet.getString("title");
 				double cost = resultSet.getDouble("cost");
 				arrayResult.add(new Good(prodid, title, cost));
 			}
-			resultSet.close();
+			//resultSet.close();
 			}
 			catch (SQLException e) {
                 System.out.println(e.getMessage());
@@ -137,8 +137,8 @@ public class DBConnection {
 
 	public Good getPriceByTitle(String title) {
 		String priceQuery = "SELECT * FROM " + name + " WHERE title ='" + title + "'";
-		try {
-			Statement statement = connection.createStatement();
+		try(Statement statement = connection.createStatement()) {
+			
 			ResultSet resultSet = statement.executeQuery(priceQuery);
 			if (resultSet != null) {
 				try {
@@ -149,7 +149,7 @@ public class DBConnection {
 				}
 			} else {
 			}
-			statement.close();
+			//statement.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -172,11 +172,11 @@ public class DBConnection {
 			right = temp;
 		}
 		String showQuery = "SELECT * FROM " + name + " WHERE cost BETWEEN " + left + " AND " + right;
-		try {
-			Statement statement = connection.createStatement();
+		try (Statement statement = connection.createStatement()){
+			
 			ResultSet resultSet = statement.executeQuery(showQuery);
 			result = show(resultSet);
-			statement.close();
+			//statement.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
